@@ -22,4 +22,13 @@ Usage
 ---------------------
 1. Place both dataset directory and the R script (run_analysis.R) together.
 2. Execute the R script.
-3. A tidy dataset (tidyData.txt) will be generated.
+
+The R script will perform the following tasks: 
+- Merges the training and the test sets to create one data set
+- Extracts only the measurements on the mean and standard deviation for each measurement
+- Uses descriptive activity names to name the activities in the data set
+- Appropriately labels the data set with descriptive variable names
+- Creates a second, independent tidy data set with the average of each variable for each activity and each subject.
+
+3. A text file (tidyData.txt) will be generated.
+
