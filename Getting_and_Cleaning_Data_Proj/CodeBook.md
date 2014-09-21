@@ -21,35 +21,35 @@ For each record it is provided:
 Data Transformation
 ---------------------
 1) Merges the training and the test sets to create one data set.
-	* Read in the following files
-		- Features (UCI HAR Dataset/features.txt)
-		- Activity Type (UCI HAR Dataset/activity_labels.txt)
-		
-        - Train Subject Identifier (UCI HAR Dataset/train/subject_train.txt)
-		- Train Data (UCI HAR Dataset/train/x_train.txt)
-		- Train Labels (UCI HAR Dataset/train/y_train.txt)
+- Read in the following files
+  - Features (UCI HAR Dataset/features.txt)
+  - Activity Type (UCI HAR Dataset/activity_labels.txt)
+	
+  - Train Subject Identifier (UCI HAR Dataset/train/subject_train.txt)
+  - Train Data (UCI HAR Dataset/train/x_train.txt)
+  - Train Labels (UCI HAR Dataset/train/y_train.txt)
 
-		- Test Subject Identifier (UCI HAR Dataset/test/subject_test.txt')
-		- Test Data (UCI HAR Dataset/test/x_test.txt)
-		- Test Labels (UCI HAR Dataset/test/y_test.txt)
-    * Assign column names to datasets
-	* Combine the datasets to form train and test datasets
-	* Combine train and test datasets into a single dataset
+  - Test Subject Identifier (UCI HAR Dataset/test/subject_test.txt')
+  - Test Data (UCI HAR Dataset/test/x_test.txt)
+  - Test Labels (UCI HAR Dataset/test/y_test.txt)
+- Assign column names to datasets
+- Combine the datasets to form train and test datasets
+- Combine train and test datasets into a single dataset
 	
 2) Extracts only the measurements on the mean and standard deviation for each measurement.
-	* Extract out the measurements, having **mean()** and **std()** in the column names 
+- Extract out the measurements, having **mean()** and **std()** in the column names 
 	
 3) Uses descriptive activity names to name the activities in the data set
-	* Attach descriptive activity names (Walking, Walking Upstairs, Walking Downstairs, Sitting, Standing, Laying) to each of the 6 activity within the datasets
+- Attach descriptive activity names (Walking, Walking Upstairs, Walking Downstairs, Sitting, Standing, Laying) to each of the 6 activity within the datasets
 	
 4) Appropriately labels the data set with descriptive variable names. 
-	* Replace "**Acc**" with "**Accelerometer**"
-	* Replace "**Gyro**" with "**Gyroscope**"
-	* Replace "**Mag**" with "**Accelerometer**"
-	* Replace "**std**" with "**StdDev**"
-	* Replace "**mean**" with "**Mean**"
+- Replace "**Acc**" with "**Accelerometer**"
+- Replace "**Gyro**" with "**Gyroscope**"
+- Replace "**Mag**" with "**Accelerometer**"
+- Replace "**std**" with "**StdDev**"
+- Replace "**mean**" with "**Mean**"
 	
 5) Creates a second, independent tidy data set with the average of each variable for each activity and each subject.
-	* Aggregate the dataset from **step 4** based on activity and subject identifiers
-	* Sort the dataset according to activity and subject identifiers
-	* Export as a text file (**tidyData.txt**) separated by comma
+- Aggregate the dataset from **step 4** based on activity and subject identifiers
+- Sort the dataset according to activity and subject identifiers
+- Export as a text file (**tidyData.txt**) separated by comma
