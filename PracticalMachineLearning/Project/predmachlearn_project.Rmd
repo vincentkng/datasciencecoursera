@@ -1,0 +1,174 @@
+---
+title: "Practical Machine Learning - Course Project"
+geometry: margin=0.5in
+output:
+  html_document: default
+  pdf_document:
+    fig_height: 6
+    fig_width: 9
+classoption: a4paper
+---
+
+## Summary
+This report investigates the quality . 
+
+
+## Exploratory Data Analysis
+* Empty strings and "NA" values are treated as null values.
+* Some columns are highly sparse, having many null values. These columns are redundant and should be removed.
+* The first 7 columns are deemed irrelevant. They should be excluded in the model.
+* Missing values are present in the original datasets.
+* The outcome variable takes on 5 values (A, B, C, D, E).
+    + The percentage of 'A' is higher than the rest.
+
+```{r, echo=TRUE}
+
+# Read datasets
+data.train <- read.csv("pml-training.csv", na.strings=c("", "NA"))
+data.test <- read.csv("pml-testing.csv", na.strings=c("", "NA"))
+
+# Display structure
+str(data.train, list.len=30)
+
+# Display dimensions
+dim(data.train)
+dim(data.test)
+
+# View complete cases
+sum(complete.cases(data.train))
+sum(complete.cases(data.test))
+
+# Preview outcome variable
+summary(data.train$classe)
+```
+
+## Data Preprocessing
+* Sparse variables (>= 90% null values) are dropped from the datasets. They provide minimal or no information.
+* The remaining variables do not have low variance. 
+* The dropped columns (from training dataset) are removed from the test dataset.
+* No missing values are present for the processed datasets.
+
+```{r, echo=TRUE}
+
+# Import packages
+library(caret)
+library(ggplot2)
+library(randomForest)
+
+# Drop columns having 90% null/empty values
+data.train.trim <- data.train[,colSums(!is.na(data.train)) >= 0.9 * nrow(data.train)]
+
+# Drop numeric columns with near zero variance if any
+columns.nzv <- nearZeroVar(data.train.trim[,sapply(data.train.trim, is.numeric)])
+columns.nzv
+
+if(length(columns.nzv) != 0)
+  data.train.trim <- data.train.trim[,-columns.nzv]
+
+# Drop same columns for test dataset
+data.test.trim <- data.test[,-which(!(names(data.train) %in% names(data.train.trim)))]
+
+# Display dimensions
+dim(data.train.trim)
+dim(data.test.trim)
+
+# View complete cases
+sum(complete.cases(data.train.trim))
+sum(complete.cases(data.test.trim))
+```
+
+## Model Fitting
+* The original training dataset is split between partial-train (70%) and validation datasets (30%).
+    + The partial train dataset is used for the model
+* Random forests is used to build the model.
+    + They are an ensemble learning method.
+    + They construct a multitude of decision trees.
+    + Features are randomly sampled.
+* The first 7 attributes are excluded from the model.
+* Repeated cross validation (3 repeats) is applied. Each iteration is 10-folds.
+    + The model is stored and can be loaded to save time.  
+* The top 30 important variables are listed.
+
+```{r, echo=TRUE, cache=FALSE}
+
+# Create new training and validation datasets
+rows.part <- createDataPartition(y=data.train.trim$classe, p=0.7, list=FALSE)
+
+data.split.train <- data.train.trim[rows.part,]
+data.split.validate <- data.train.trim[-rows.part,]
+
+# Display dimensions
+dim(data.split.train)
+dim(data.split.validate)
+
+# Initialize seed
+set.seed(1342)
+
+# Build model
+#modelfit <- train(classe~., method="rf", data=data.split.train[,-c(1:7)], trace = TRUE, 
+ #                   trControl=trainControl(method="repeatedcv", number=10, repeats=3))
+
+# Save model
+#saveRDS(modelfit, file = "rf-k10-r3.rds")
+
+# Load model
+modelfit <- readRDS(file = "rf-k10-r3.rds")
+
+# View variable importance
+#varImpPlot(modelfit$finalModel, sort=TRUE, n.var=20)
+
+vars.top <- 30
+vars.imp <- as.data.frame(modelfit$finalModel$importance)
+vars.imp <- cbind(Variable=row.names(vars.imp), vars.imp)
+vars.imp <- vars.imp[order(-vars.imp[,2]),]
+vars.imp$Variable <- reorder(vars.imp$Variable, vars.imp$MeanDecreaseGini)
+
+ggplot(vars.imp[1:vars.top,], aes(x=Variable, y=MeanDecreaseGini)) + 
+  geom_bar(stat="identity", fill=rainbow(vars.top), color="black") + 
+  labs(x="Predictors", y="Mean Decrease Gini", title=paste("Top", vars.top, "important variables")) +
+  coord_flip()
+
+plot(modelfit$finalModel)
+```
+
+## Model Evaluation
+* Final Model
+    + Accuracy was used to select the optimal model.
+    + 27 variables are randomly sampled as candidates at each split. 
+    + The in-sample error rate is `r (1 - modelfit$results[grep(modelfit$finalModel$mtry, modelfit$finalModel$mtry),2])`.
+* The model is applied onto the validation dataset.
+    + The out-sample error rate is `r (1 - 0.998)`.
+
+```{r, echo=TRUE}
+# View Model
+print (modelfit)
+
+# Predict validation dataset
+predict.validate <- predict(modelfit, data.split.validate)
+
+# View prediction results
+confusionMatrix(predict.validate, data.split.validate$classe)
+```
+
+## Model Prediction
+* The model is applied on the test dataset.
+* Each observation is written in a text file.
+    + The problem id is used as the filename.
+
+```{r, echo=TRUE}
+
+# Predict test dataset
+predict.test <- predict(modelfit, data.test.trim)
+
+# Write predictions to file
+for (i in 1:length(predict.test))
+{
+  filename = paste0("problem_id_", i, ".txt")
+  write.table(predict.test[i], file=filename, quote=FALSE, row.names=FALSE, col.names=FALSE)
+  
+  print(paste0("Problem Id [", i, "] - Predicted Class: ", predict.test[i]))
+}# end for
+
+```
+
+*****
