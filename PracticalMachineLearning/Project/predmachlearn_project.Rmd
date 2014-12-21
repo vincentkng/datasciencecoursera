@@ -105,14 +105,14 @@ dim(data.split.validate)
 set.seed(1342)
 
 # Build model
-#modelfit <- train(classe~., method="rf", data=data.split.train[,-c(1:7)], trace = TRUE, 
- #                   trControl=trainControl(method="repeatedcv", number=10, repeats=3))
+modelfit <- train(classe~., method="rf", data=data.split.train[,-c(1:7)], trace = TRUE, 
+                   trControl=trainControl(method="repeatedcv", number=10, repeats=3))
 
 # Save model
-#saveRDS(modelfit, file = "rf-k10-r3.rds")
+saveRDS(modelfit, file = "rf-k10-r3.rds")
 
 # Load model
-modelfit <- readRDS(file = "rf-k10-r3.rds")
+#modelfit <- readRDS(file = "rf-k10-r3.rds")
 
 # View variable importance
 #varImpPlot(modelfit$finalModel, sort=TRUE, n.var=20)
@@ -127,8 +127,6 @@ ggplot(vars.imp[1:vars.top,], aes(x=Variable, y=MeanDecreaseGini)) +
   geom_bar(stat="identity", fill=rainbow(vars.top), color="black") + 
   labs(x="Predictors", y="Mean Decrease Gini", title=paste("Top", vars.top, "important variables")) +
   coord_flip()
-
-plot(modelfit$finalModel)
 ```
 
 ## Model Evaluation
