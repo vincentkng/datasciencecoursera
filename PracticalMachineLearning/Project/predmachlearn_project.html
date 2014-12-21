@@ -64,6 +64,7 @@ if (window.hljs && document.readyState && document.readyState === "complete") {
 <li>The data is santized to handle irrelevant attributes and missing values.</li>
 <li>Random Forest is selected to build the predictor.</li>
 <li>The predictor is evaluated to be highly accurate on both in-sample and out-of-sample observations.</li>
+<li>The predictor is applied onto the test dataset.</li>
 </ul>
 </div>
 <div id="exploratory-data-analysis" class="section level2">
@@ -276,33 +277,33 @@ confusionMatrix(predict.validate, data.split.validate$classe)</code></pre>
 ## 
 ##           Reference
 ## Prediction    A    B    C    D    E
-##          A 1673    2    0    0    0
-##          B    1 1137    2    0    0
-##          C    0    0 1020    5    0
-##          D    0    0    4  959    0
-##          E    0    0    0    0 1082
+##          A 1672    3    0    0    0
+##          B    2 1135    0    0    0
+##          C    0    1 1025    4    1
+##          D    0    0    1  960    0
+##          E    0    0    0    0 1081
 ## 
 ## Overall Statistics
-##                                          
-##                Accuracy : 0.9976         
-##                  95% CI : (0.996, 0.9987)
-##     No Information Rate : 0.2845         
-##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16      
-##                                          
-##                   Kappa : 0.997          
-##  Mcnemar's Test P-Value : NA             
+##                                           
+##                Accuracy : 0.998           
+##                  95% CI : (0.9964, 0.9989)
+##     No Information Rate : 0.2845          
+##     P-Value [Acc &gt; NIR] : &lt; 2.2e-16       
+##                                           
+##                   Kappa : 0.9974          
+##  Mcnemar's Test P-Value : NA              
 ## 
 ## Statistics by Class:
 ## 
 ##                      Class: A Class: B Class: C Class: D Class: E
-## Sensitivity            0.9994   0.9982   0.9942   0.9948   1.0000
-## Specificity            0.9995   0.9994   0.9990   0.9992   1.0000
-## Pos Pred Value         0.9988   0.9974   0.9951   0.9958   1.0000
-## Neg Pred Value         0.9998   0.9996   0.9988   0.9990   1.0000
+## Sensitivity            0.9988   0.9965   0.9990   0.9959   0.9991
+## Specificity            0.9993   0.9996   0.9988   0.9998   1.0000
+## Pos Pred Value         0.9982   0.9982   0.9942   0.9990   1.0000
+## Neg Pred Value         0.9995   0.9992   0.9998   0.9992   0.9998
 ## Prevalence             0.2845   0.1935   0.1743   0.1638   0.1839
-## Detection Rate         0.2843   0.1932   0.1733   0.1630   0.1839
-## Detection Prevalence   0.2846   0.1937   0.1742   0.1636   0.1839
-## Balanced Accuracy      0.9995   0.9988   0.9966   0.9970   1.0000</code></pre>
+## Detection Rate         0.2841   0.1929   0.1742   0.1631   0.1837
+## Detection Prevalence   0.2846   0.1932   0.1752   0.1633   0.1837
+## Balanced Accuracy      0.9990   0.9980   0.9989   0.9978   0.9995</code></pre>
 </div>
 <div id="model-prediction" class="section level2">
 <h2>Model Prediction</h2>

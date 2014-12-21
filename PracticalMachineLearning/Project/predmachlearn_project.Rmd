@@ -21,6 +21,7 @@ The objective of the project is to predict the manner which the participants per
 * The data is santized to handle irrelevant attributes and missing values.
 * Random Forest is selected to build the predictor. 
 * The predictor is evaluated to be highly accurate on both in-sample and out-of-sample observations.
+* The predictor is applied onto the test dataset.
 
 ## Exploratory Data Analysis
 * Empty strings and "NA" values are treated as null values.
@@ -99,7 +100,7 @@ sum(complete.cases(data.test.trim))
     + The model is stored and can be loaded to save time.  
 * The top 30 important variables are listed.
 
-```{r, echo=TRUE, cache=FALSE}
+```{r, echo=TRUE}
 
 # Create new training and validation datasets
 rows.part <- createDataPartition(y=data.train.trim$classe, p=0.7, list=FALSE)
