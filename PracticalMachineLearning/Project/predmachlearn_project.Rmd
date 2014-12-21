@@ -10,8 +10,17 @@ classoption: a4paper
 ---
 
 ## Summary
-This report investigates the quality . 
+Six participants were asked to perform Unilateral Dumbbell Biceps Curl in five different manners (Class A, B, C, D, E).
+Class A corresponds to the correct execution of the exercise while the other 4 classes are incorrect executions.
+Data was collected using accelerometers attached to the participants and dumbbells. 
+More information is available from http://groupware.les.inf.puc-rio.br/har (see the section on the Weight Lifting Exercise Dataset).
 
+The objective of the project is to predict the manner which the participants performed the exericse.
+
+* Some exploratory data analysis is performed to understand the dataset. 
+* The data is santized to handle irrelevant attributes and missing values.
+* Random Forest is selected to build the predictor. 
+* The predictor is evaluated to be highly accurate on both in-sample and out-of-sample observations.
 
 ## Exploratory Data Analysis
 * Empty strings and "NA" values are treated as null values.
@@ -43,9 +52,10 @@ summary(data.train$classe)
 ```
 
 ## Data Preprocessing
-* Sparse variables (>= 90% null values) are dropped from the datasets. They provide minimal or no information.
-* The remaining variables do not have low variance. 
+* Sparse attributes (>= 90% null values) are dropped from the datasets. They provide minimal or no information.
+* The remaining attributes do not have low variance. 
 * The dropped columns (from training dataset) are removed from the test dataset.
+* The datasets are reduced from 160 attributes to 60 attributes (including first 7 supporting attributes). 
 * No missing values are present for the processed datasets.
 
 ```{r, echo=TRUE}
@@ -83,7 +93,7 @@ sum(complete.cases(data.test.trim))
 * Random forests is used to build the model.
     + They are an ensemble learning method.
     + They construct a multitude of decision trees.
-    + Features are randomly sampled.
+    + Features are randomly sampled (implicit feature selection).
 * The first 7 attributes are excluded from the model.
 * Repeated cross validation (3 repeats) is applied. Each iteration is 10-folds.
     + The model is stored and can be loaded to save time.  
@@ -105,14 +115,14 @@ dim(data.split.validate)
 set.seed(1342)
 
 # Build model
-modelfit <- train(classe~., method="rf", data=data.split.train[,-c(1:7)], trace = TRUE, 
-                   trControl=trainControl(method="repeatedcv", number=10, repeats=3))
+#modelfit <- train(classe~., method="rf", data=data.split.train[,-c(1:7)], trace = TRUE, 
+#                   trControl=trainControl(method="repeatedcv", number=10, repeats=3))
 
 # Save model
-saveRDS(modelfit, file = "rf-k10-r3.rds")
+#saveRDS(modelfit, file = "rf-k10-r3.rds")
 
 # Load model
-#modelfit <- readRDS(file = "rf-k10-r3.rds")
+modelfit <- readRDS(file = "rf-k10-r3.rds")
 
 # View variable importance
 #varImpPlot(modelfit$finalModel, sort=TRUE, n.var=20)
